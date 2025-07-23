@@ -1,81 +1,250 @@
+// import React, { useState } from 'react';
+// import './Login.css';
+// import { useNavigate } from "react-router-dom";
+
+// const Login = () => {
+//   const [isRegistering, setIsRegistering] = useState(false);
+//   const [formData, setFormData] = useState({
+//     email: '',
+//     password: '',
+//     fullName: '',
+//     phone: ''
+//   });
+
+//   const handleChange = (e) => {
+//     const { name, value } = e.target;
+//     setFormData(prev => ({ ...prev, [name]: value }));
+//   };
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     console.log('Form submitted:', formData);
+//     // Add your authentication logic here
+//   };
+
+//   const navigate= useNavigate();
+
+//   return (
+//     <div className="login-container">
+//       <div className="login-header">
+//         <h1 className="login-title">A lifetime of discounts? It's Genius.</h1>
+//         <p className="login-subtitle">Get rewarded for your travels - unlock instant savings of 10% or more</p>
+//       </div>
+
+//       <div className="login-box">
+//         <div className="toggle-buttons">
+//           <button 
+//             className={`toggle-btn ${!isRegistering ? 'active' : ''}`}
+//             onClick={() => setIsRegistering(false)}
+//           >
+//             Sign In
+//           </button>
+//           <button 
+//             className={`toggle-btn ${isRegistering ? 'active' : ''}`}
+//             onClick={() => setIsRegistering(true)}
+//           >
+//             Register
+//           </button>
+//         </div>
+
+//         <form onSubmit={handleSubmit}>
+//           {isRegistering && (
+//             <>
+//               <input
+//                 type="text"
+//                 name="fullName"
+//                 placeholder="Full Name"
+//                 className="login-input"
+//                 value={formData.fullName}
+//                 onChange={handleChange}
+//                 required
+//               />
+//               <input
+//                 type="tel"
+//                 name="phone"
+//                 placeholder="Phone Number"
+//                 className="login-input"
+//                 value={formData.phone}
+//                 onChange={handleChange}
+//                 required
+//               />
+//             </>
+//           )}
+
+//           <input
+//             type="email"
+//             name="email"
+//             placeholder="Email Address"
+//             className="login-input"
+//             value={formData.email}
+//             onChange={handleChange}
+//             required
+//             autoFocus
+//           />
+//           <input
+//             type="password"
+//             name="password"
+//             placeholder="Password"
+//             className="login-input"
+//             value={formData.password}
+//             onChange={handleChange}
+//             required
+//           />
+
+//           <button type="submit" className="login-btn" >
+//             {isRegistering ? 'Register' : 'Sign In'}
+//           </button>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Login;
+
+
 import React, { useState } from 'react';
-import { Formik } from 'formik';
-import { useNavigate } from "react-router-dom";
-import './login.css'
+import { useNavigate } from 'react-router-dom';
+import './Login.css';
 
-function Login() {
+const Login = () => {
+  const navigate = useNavigate();
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    fullName: '',
+    phone: ''
+  });
+  const [errors, setErrors] = useState({});
 
-    let navigate = useNavigate();
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // Email validation
+    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      newErrors.email = 'Invalid email address';
+    }
 
-    return (
-        <div className="main">
-        <div className='form'>
-            <h1 className="text-6xl">AUTHENTICATION FORM!</h1>
-            <Formik
-                initialValues={{ email: '', password: '' }}
-                validate={values => {
-                    const errors = {};
-                    if (!values.email ) {
-                        errors.email = 'Required';
-                    } else if (
-                        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-                    ) {
-                        errors.email = 'Invalid email address';
-                    }
-                    return errors;
+    // Password validation (min 6 chars)
+    if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
 
-                
-                }}
-                onSubmit={(v,) => {
-                    setTimeout(() => {
-                        navigate("/home");
-                    }, 100);
-                }}
-            >
-                {({
-                    values,
-                    errors,
-                    touched,
-                    handleChange,
-                    handleBlur,
-                    handleSubmit,
-                    isSubmitting,
-                    /* and other goodies */
-                }) => (
-                    <form onSubmit={handleSubmit}>
-                        <label htmlFor="email">Email Address</label>
-                        <input
-                            type="email"
-                            name="email"
-                            id="email"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.email}
-                        />
-                        {errors.email && touched.email && errors.email}
+    // Registration-specific validations
+    if (isRegistering) {
+      if (!formData.fullName.trim()) {
+        newErrors.fullName = 'Full name is required';
+      }
+      if (!formData.phone.match(/^\d{10,15}$/)) {
+        newErrors.phone = 'Invalid phone number';
+      }
+    }
 
-                        <br /><br />
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-                        <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            name="password"
-                            id="password"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.password}
-                        />
-                        {errors.password && touched.password && errors.password}
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (validateForm()) {
+      console.log('Form submitted:', formData);
+      navigate('/home'); // Redirect on success
+    }
+  };
 
-                        <button type="submit" disabled={isSubmitting} className='submit'>
-                            submit
-                        </button>
-                    </form>
-                )}
-            </Formik>
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    // Clear error when user types
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  return (
+    <div className="login-container">
+      <div className="login-header">
+        <h1 className="login-title">A lifetime of discounts? It's Genius.</h1>
+        <p className="login-subtitle">Get rewarded for your travels - unlock instant savings of 10% or more</p>
+      </div>
+
+      <div className="login-box">
+        <div className="toggle-buttons">
+          <button 
+            type="button"
+            className={`toggle-btn ${!isRegistering ? 'active' : ''}`}
+            onClick={() => setIsRegistering(false)}
+          >
+            Sign In
+          </button>
+          <button 
+            type="button"
+            className={`toggle-btn ${isRegistering ? 'active' : ''}`}
+            onClick={() => setIsRegistering(true)}
+          >
+            Register
+          </button>
         </div>
-        </div>
-    )
-}
+
+        <form onSubmit={handleSubmit} noValidate>
+          {isRegistering && (
+            <>
+              <input
+                type="text"
+                name="fullName"
+                placeholder="Full Name"
+                className={`login-input ${errors.fullName ? 'error' : ''}`}
+                value={formData.fullName}
+                onChange={handleChange}
+                required
+              />
+              {errors.fullName && <span className="error-message">{errors.fullName}</span>}
+
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Phone Number"
+                className={`login-input ${errors.phone ? 'error' : ''}`}
+                value={formData.phone}
+                onChange={handleChange}
+                required
+              />
+              {errors.phone && <span className="error-message">{errors.phone}</span>}
+            </>
+          )}
+
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            className={`login-input ${errors.email ? 'error' : ''}`}
+            value={formData.email}
+            onChange={handleChange}
+            required
+            autoFocus
+          />
+          {errors.email && <span className="error-message">{errors.email}</span>}
+
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            className={`login-input ${errors.password ? 'error' : ''}`}
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+          {errors.password && <span className="error-message">{errors.password}</span>}
+
+          <button type="submit" className="login-btn">
+            {isRegistering ? 'Register' : 'Sign In'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
 
 export default Login;

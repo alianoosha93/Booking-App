@@ -1,16 +1,21 @@
-import './Hotel.css'
-import Navbar from '../../components/Navbar/Navbar'
-import Header from '../../components/Header/Header'
-import MailList from '../../components/MailList/MailList'
-import Footer from '../../components/Footer/Footer'
+import "./Hotel.css";
+import Navbar from "../../components/Navbar/Navbar";
+import Header from "../../components/Header/Header";
+import MailList from "../../components/MailList/MailList";
+import Footer from "../../components/Footer/Footer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleArrowLeft, faCircleArrowRight, faCircleXmark, faLocationDot } from '@fortawesome/free-solid-svg-icons'
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { useSelector } from 'react-redux'
+import {
+  faCircleArrowLeft,
+  faCircleArrowRight,
+  faCircleXmark,
+  faLocationDot,
+} from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import hotel1 from "../../assets/apartment.jpg";
 
 const Hotel = () => {
-
   const dispatch = useDispatch();
   const position = useSelector((state) => state);
 
@@ -20,7 +25,7 @@ const Hotel = () => {
   const handleOpen = (i) => {
     setSliderNo(i);
     setOpen(true);
-  }
+  };
 
   const photos = [
     {
@@ -33,10 +38,10 @@ const Hotel = () => {
       src: "https://cf.bstatic.com/xdata/images/hotel/square600/535513667.webp?k=6ff4ddc832b397caf74eb1e404f1c4b866f8566bc271518897f1a8e07a98ab8e&o=",
     },
     {
-      src: "https://cf.bstatic.com/xdata/images/hotel/max1280x900/547250522.jpg?k=dcd91bcc085ca69d6853bd15711c3bfa3db26ccdbdea6a594f796eff0cf199c8&o=&hp=1",
+      src: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/144318904.jpg?k=27cd434d66d0310216df41c3922566efe43aedb214c90bf57045edf423aeb5c6&o=",
     },
     {
-      src: "https://cf.bstatic.com/xdata/images/hotel/square600/449967744.webp?k=a42ddf73110354f7730323883068ac57745f30b4018bbbfadd2a93f7ed8e482b&o=",
+      src: "https://cf.bstatic.com/xdata/images/hotel/square600/632610483.webp?k=216b94b19f587f6c132246faa536336175ed5a5d9fb96aa2639c9c2dc74c4690&o=",
     },
     {
       src: "https://cf.bstatic.com/xdata/images/hotel/max1280x900/261707389.jpg?k=52156673f9eb6d5d99d3eed9386491a0465ce6f3b995f005ac71abc192dd5827&o=&hp=1",
@@ -47,34 +52,50 @@ const Hotel = () => {
     let newSliderNo;
 
     if (direction === "l") {
-      newSliderNo = sliderNo === 0 ? 5 : sliderNo - 1
-    }
-
-    else {
-      newSliderNo = sliderNo === 5 ? 0 : sliderNo + 1
+      newSliderNo = sliderNo === 0 ? 5 : sliderNo - 1;
+    } else {
+      newSliderNo = sliderNo === 5 ? 0 : sliderNo + 1;
     }
 
     setSliderNo(newSliderNo);
-  }
+  };
 
   return (
     <div>
       <Navbar />
-      <Header type='List' />
+      <Header type="List" />
 
       <div className="hotelContainer">
-
-        {open && <div className="slider">
-          <FontAwesomeIcon icon={faCircleXmark} className="close" onClick={() => setOpen(false)} />
-          <FontAwesomeIcon icon={faCircleArrowLeft} className="arrow" onClick={() => handleMove("l")} />
-          <div className="sliderWrapper">
-            <img src={photos[sliderNo].src} className="sliderImg" />
+        {open && (
+          <div className="slider">
+            <FontAwesomeIcon
+              icon={faCircleXmark}
+              className="close"
+              onClick={() => setOpen(false)}
+            />
+            <FontAwesomeIcon
+              icon={faCircleArrowLeft}
+              className="arrow"
+              onClick={() => handleMove("l")}
+            />
+            <div className="sliderWrapper">
+              <img src={photos[sliderNo].src} className="sliderImg" />
+            </div>
+            <FontAwesomeIcon
+              icon={faCircleArrowRight}
+              className="arrow"
+              onClick={() => handleMove("r")}
+            />
           </div>
-          <FontAwesomeIcon icon={faCircleArrowRight} className="arrow" onClick={() => handleMove("r")} />
-        </div>}
+        )}
 
         <div className="hotelWrapper">
-          <button onClick={(e) => dispatch({ type: "BOOKED" })} className="bookNow">Reserve or Book Now!</button>
+          <button
+            onClick={(e) => dispatch({ type: "BOOKED" })}
+            className="bookNow"
+          >
+            Reserve or Book Now!
+          </button>
           <h3 className="booking">{position}</h3>
           <h1 className="hotelTitle">Tower Street Apartments</h1>
           <div className="hotelAddress">
@@ -91,13 +112,18 @@ const Hotel = () => {
           <div className="hotelImages">
             {photos.map((photo, i) => (
               <div className="hotelImgWrapper" key={i}>
-                <img src={photo.src} className="hotelImg" onClick={() => { handleOpen(i) }} />
+                <img
+                  src={photo.src}
+                  className="hotelImg"
+                  onClick={() => {
+                    handleOpen(i);
+                  }}
+                />
               </div>
             ))}
           </div>
 
           <div className="hotelDetails">
-
             <div className="hotelDetailsTexts">
               <h1 className="hotelTitle">Stay in the heart of City</h1>
               <p className="hotelDesc">
@@ -121,20 +147,22 @@ const Hotel = () => {
                 Located in the real heart of Krakow, this property has an
                 excellent location score of 9.8!
               </span>
-              <h2> <b>$945</b> (9 nights) </h2>
-              <button onClick={(e) => dispatch({ type: "BOOKED" })} >Reserve or Book Now!</button>
+              <h2>
+                {" "}
+                <b>$945</b> (9 nights){" "}
+              </h2>
+              <button onClick={(e) => dispatch({ type: "BOOKED" })}>
+                Reserve or Book Now!
+              </button>
             </div>
-
           </div>
         </div>
 
         <MailList />
         <Footer />
-
       </div>
-
     </div>
-  )
-}
+  );
+};
 
 export default Hotel;

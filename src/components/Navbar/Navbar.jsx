@@ -11,7 +11,7 @@ const Navbar = () => {
   return (
     <div className="navbar">
         <div className="navContainer">
-            <span className="logo">lamabooking</span>
+            <h2 className="logo"><h1 style={{display:"inline"}}>✈️</h1>AeroSoft</h2>
             <div className="navItems">
                 <button className="navButton" onClick={handleLogin}>Register</button>
                 <button className="navButton" onClick={handleLogin}>Login</button>
